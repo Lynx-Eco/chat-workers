@@ -1,0 +1,102 @@
+Chat workers under go/ (licensed AGPL-3.0-or-later as a whole, see LICENSE)
+are built from the following upstream components, used unmodified as Go
+module dependencies at the exact versions in chatworker/go.mod:
+
+  maunium.net/go/mautrix v0.33.0 (bridgev2 framework)   MPL-2.0
+  go.mau.fi/util v0.11.1                                 MPL-2.0
+  github.com/mattn/go-sqlite3 v1.14.53                   MIT (built with -tags libsqlite3: its
+                                                         bundled SQLite is not compiled in)
+  SQLite3 Multiple Ciphers 2.7.1 (SQLite 3.54.1)         MIT (SQLite itself: public domain)
+  google.golang.org/protobuf v1.36.12                    BSD-3-Clause
+  github.com/rs/zerolog v1.35.1                          MIT
+  further indirect dependencies: see chatworker/go.sum   (each under its own licence)
+
+chat_telegram also links (each licence read in the module's own licence
+file at that version):
+
+  go.mau.fi/mautrix-telegram v0.2611.0 (connector)       AGPL-3.0-or-later (LICENSE is the AGPL
+                                                         version 3; the source headers say "or
+                                                         any later version"). Its
+                                                         LICENSE.exceptions grant exceptions to
+                                                         Beeper and Element only: none applies here.
+    its pkg/gotd (a fork of github.com/gotd/td)          MIT (pkg/gotd/LICENSE)
+  go.mau.fi/webp v0.3.0                                  BSD-3-Clause; compiles in libwebp 1.6.0
+                                                         (internal/libwebp-1.6.0: COPYING
+                                                         BSD-3-Clause, PATENTS Google's grant)
+  go.mau.fi/zerozap v0.1.2                               MPL-2.0
+  go.uber.org/zap v1.28.0, atomic v1.12.0,
+    multierr v1.11.0                                     MIT
+  github.com/go-faster/jx v1.2.0                         MIT
+  github.com/go-faster/errors v0.7.1, xor v1.0.0         BSD-3-Clause
+  github.com/gotd/ige v0.2.2                             MIT
+  github.com/gotd/neo v0.1.5                             BSD-3-Clause
+  github.com/klauspost/compress v1.20.4                  BSD-3-Clause (flate and gzip are linked;
+                                                         the file's other sections cover packages
+                                                         not linked)
+  github.com/segmentio/asm v1.2.1                        MIT
+  github.com/cenkalti/backoff/v4 v4.3.0                  MIT
+  github.com/cespare/xxhash/v2 v2.3.0                    MIT
+  go.opentelemetry.io/otel, otel/trace v1.47.0           Apache-2.0
+  golang.org/x/image v0.48.0, golang.org/x/sync v0.25.0  BSD-3-Clause
+  rsc.io/qr v0.2.0                                       BSD-3-Clause
+  gopkg.in/yaml.v3 v3.0.1                                MIT (the files ported from libyaml) and
+                                                         Apache-2.0 (the rest)
+
+chat_whatsapp also links
+(each licence read in the module's own licence file at that version):
+
+  go.mau.fi/mautrix-whatsapp v0.2611.0 (connector)       AGPL-3.0-or-later (LICENSE is the AGPL
+                                                         version 3; the source headers say "or
+                                                         any later version"). Its
+                                                         LICENSE.exceptions grant exceptions to
+                                                         Beeper and Element only: none applies here.
+  go.mau.fi/whatsmeow v0.0.0-20261116172437-19d61352436f MPL-2.0
+  go.mau.fi/libsignal v0.2.3                             GPL-3.0 (LICENSE is the GPL version 3;
+                                                         the sources name no version). AGPL-3.0
+                                                         section 13 permits the combination.
+  go.mau.fi/webp v0.3.0                                  BSD-3-Clause; compiles in libwebp 1.6.0
+                                                         (internal/libwebp-1.6.0: COPYING
+                                                         BSD-3-Clause, PATENTS Google's grant)
+  github.com/beeper/argo-go v1.1.2                       MIT
+  github.com/vektah/gqlparser/v2 v2.5.27                 MIT
+  github.com/elliotchance/orderedmap/v3 v3.1.0           MIT
+  github.com/lib/pq v1.12.3                              MIT
+  github.com/google/uuid v1.6.0                          BSD-3-Clause
+  golang.org/x/image v0.48.0, golang.org/x/sync v0.25.0  BSD-3-Clause
+  gopkg.in/yaml.v3 v3.0.1                                MIT (the files ported from libyaml) and
+                                                         Apache-2.0 (the rest)
+
+contract/channel.pb.go is generated from crates/ingest_models/schemas/channel.proto
+(Apache-2.0) with protoc-gen-go v1.36.12.
+
+SQLite3 Multiple Ciphers (https://github.com/utelle/SQLite3MultipleCiphers),
+Copyright (c) 2006-2026 Ulrich Telle, MIT licence, is linked statically into
+every worker binary. It is not committed here: build.sh fetches
+  sqlite3mc-2.7.1-sqlite-3.54.1-amalgamation.zip
+from the project's v2.7.1 release and refuses it unless its SHA-256 is
+  d6bc59678e015c5ac6d3ec5d7b657c351230b36c8052b185e446c9d52ba01af0
+(sqlite3mc.sha256; the same value as the release's SHA256SUMS), then
+compiles sqlite3mc_amalgamation.c with:
+  -O2 -fPIC -DSQLITE_ENABLE_RTREE -DSQLITE_THREADSAFE=1 -DHAVE_USLEEP=1
+  -DSQLITE_ENABLE_FTS3 -DSQLITE_ENABLE_FTS3_PARENTHESIS -DSQLITE_OMIT_DEPRECATED
+  -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 -DSQLITE_ENABLE_UPDATE_DELETE_LIMIT
+  -DSQLITE_USE_URI=1
+The MIT licence text of SQLite3 Multiple Ciphers:
+
+  Permission is hereby granted, free of charge, to any person obtaining a
+  copy of this software and associated documentation files (the "Software"),
+  to deal in the Software without restriction, including without limitation
+  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+  and/or sell copies of the Software, and to permit persons to whom the
+  Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in
+  all copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
