@@ -1,0 +1,11 @@
+# The libsignal that chat_signal links (libsignal_ffi.a, built by
+# `./build.sh libsignal` or named by LYNX_LIBSIGNAL_DIR). It must be the
+# version go.mau.fi/mautrix-signal's libsignalgo is generated for
+# (pkg/libsignalgo/signalversion/version.go): build.sh refuses to go on
+# when they differ, and the link fails on any other library
+# (libsignalgo/version.go calls signal_ffi_version_<version>). When the
+# connector moves, move both lines together: the tag's commit is
+# `git ls-remote https://github.com/signalapp/libsignal refs/tags/<version>^{}`.
+repo https://github.com/signalapp/libsignal
+version v0.106.1
+commit 904c8dc8216073b078a5f2f5090e3da8382e6a92
