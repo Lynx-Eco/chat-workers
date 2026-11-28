@@ -1,0 +1,5 @@
+bin/
+bin-plain/
+bin-darwin-arm64/
+.sqlite3mc/
+.libsignal/
